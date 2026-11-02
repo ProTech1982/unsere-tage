@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="rose">#FFB23A5B</color>
-    <color name="rose_light">#FFE8899F</color>
-    <color name="gold">#FFC08A3E</color>
-    <color name="ink">#FF241A1E</color>
-    <color name="icon_bg">#FFFDF4F6</color>
+    <!-- Markenfarben, in beiden Modi gleich -->
+    <color name="plum">#FF4A1D34</color>
+    <color name="plum_deep">#FF2E1120</color>
+    <color name="rose">#FFC14D6B</color>
+    <color name="blush">#FFE9A0B0</color>
+    <color name="gold">#FFD8A657</color>
+
+    <!-- Heller Modus -->
+    <color name="bg">#FFFFFBFA</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_soft">#FFF8EFF2</color>
+    <color name="ink">#FF2A1F23</color>
+    <color name="ink_soft">#FF6E5B62</color>
+    <color name="outline">#FFE6D5DA</color>
+    <color name="scrim_top">#00000000</color>
+    <color name="scrim_bottom">#E6FFFBFA</color>
+
+    <color name="ic_launcher_background">#FDF4F6</color>
 </resources>

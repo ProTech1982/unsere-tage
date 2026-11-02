@@ -2,66 +2,85 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SoftCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="22dp">
 
-        <TextView
-            android:id="@+id/tvCardLabel"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.08"
-            android:textAllCaps="true"
-            android:textSize="12sp"
-            android:alpha="0.65" />
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/tvCardDate"
+            <TextView
+                android:id="@+id/tvCardLabel"
+                style="@style/Eyebrow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvCardDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textSize="14sp"
-            android:alpha="0.75" />
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:baselineAligned="true">
 
-        <TextView
-            android:id="@+id/tvCardBig"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="38sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary" />
+            <TextView
+                android:id="@+id/tvCardBig"
+                style="@style/BigNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/tvCardUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="17sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:text="Tage" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvCardPeriod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:textSize="16sp" />
 
-        <View
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressYear"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:alpha="0.15"
-            android:background="?attr/colorOnSurface" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:trackCornerRadius="4dp"
+            app:trackThickness="6dp" />
 
         <TextView
             android:id="@+id/tvCardNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:textSize="15sp"
-            android:lineSpacingExtra="3dp" />
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:lineSpacingExtra="3dp"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

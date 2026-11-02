@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#FF161013</color>
+    <color name="surface">#FF201820</color>
+    <color name="surface_soft">#FF2A1F28</color>
+    <color name="ink">#FFF4E9ED</color>
+    <color name="ink_soft">#FFB9A3AC</color>
+    <color name="outline">#FF3B2D36</color>
+    <color name="scrim_top">#00000000</color>
+    <color name="scrim_bottom">#E6161013</color>
+</resources>

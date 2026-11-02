@@ -11,8 +11,11 @@ android {
         applicationId = "com.unseretage.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        // Die Build-Nummer von GitHub Actions wird zur Versionsnummer,
+        // damit die App neue Releases erkennen kann.
+        val build = (System.getenv("BUILD_NUMBER") ?: "1").toIntOrNull() ?: 1
+        versionCode = build
+        versionName = "1.$build"
     }
 
     buildTypes {

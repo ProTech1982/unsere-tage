@@ -40,6 +40,15 @@ object DateMath {
     fun yearsAtNextAnniversary(from: LocalDate, today: LocalDate): Int =
         nextAnniversary(from, today).year - from.year
 
+    /** Wie weit das laufende Jahr bis zum nächsten Jahrestag fortgeschritten ist, 0..100. */
+    fun anniversaryProgress(from: LocalDate, today: LocalDate): Int {
+        val next = nextAnniversary(from, today)
+        val previous = anniversaryIn(from, next.year - 1)
+        val span = ChronoUnit.DAYS.between(previous, next).coerceAtLeast(1)
+        val done = ChronoUnit.DAYS.between(previous, today).coerceIn(0, span)
+        return ((done * 100) / span).toInt()
+    }
+
     /** Nächster Tausender-Meilenstein, z. B. 5000 Tage. */
     fun nextMilestone(totalDays: Long): Long = (totalDays / 1000 + 1) * 1000
 

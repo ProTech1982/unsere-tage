@@ -2,10 +2,13 @@ package com.unseretage.app
 
 import android.app.AlarmManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -29,6 +32,20 @@ class SettingsActivity : AppCompatActivity() {
     private var weddingDate: LocalDate? = null
     private var hour = 9
     private var minute = 0
+    private var photoUri: String? = null
+
+    private val pickPhoto =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri == null) return@registerForActivityResult
+            // Dauerhafte Leseerlaubnis, damit das Bild auch nach einem Neustart da ist.
+            runCatching {
+                contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            }
+            photoUri = uri.toString()
+            updatePhotoViews()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +62,14 @@ class SettingsActivity : AppCompatActivity() {
             pickDate("Hochzeitstag", weddingDate) { weddingDate = it; updateDateButtons() }
         }
         binding.btnTime.setOnClickListener { pickTime() }
+
+        binding.btnPickPhoto.setOnClickListener {
+            pickPhoto.launch(arrayOf("image/*"))
+        }
+        binding.btnRemovePhoto.setOnClickListener {
+            photoUri = null
+            updatePhotoViews()
+        }
 
         binding.swPreWarn.setOnCheckedChangeListener { _, checked ->
             binding.groupPreWarn.visibility = if (checked) View.VISIBLE else View.GONE
@@ -66,6 +91,15 @@ class SettingsActivity : AppCompatActivity() {
         weddingDate = prefs.weddingDate
         hour = prefs.notifyHour
         minute = prefs.notifyMinute
+        photoUri = prefs.photoUri
+
+        binding.groupPhotoStyle.check(
+            when (prefs.photoStyle) {
+                PhotoStyle.BACKGROUND -> R.id.btnStyleBackground
+                PhotoStyle.AVATAR -> R.id.btnStyleAvatar
+                else -> R.id.btnStyleBanner
+            }
+        )
 
         val warn = prefs.preWarnDays
         binding.swPreWarn.isChecked = warn > 0
@@ -83,6 +117,7 @@ class SettingsActivity : AppCompatActivity() {
 
         updateDateButtons()
         updateTimeButton()
+        updatePhotoViews()
     }
 
     private fun updateDateButtons() {
@@ -96,12 +131,24 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnTime.text = String.format(Locale.GERMANY, "Erinnerung um %02d:%02d Uhr", hour, minute)
     }
 
+    private fun updatePhotoViews() {
+        val bitmap = PhotoLoader.load(this, photoUri, 256)
+        if (bitmap != null) {
+            binding.ivPhotoPreview.setImageBitmap(bitmap)
+            binding.ivPhotoPreview.visibility = View.VISIBLE
+            binding.btnRemovePhoto.visibility = View.VISIBLE
+            binding.btnPickPhoto.text = "Anderes Foto wählen"
+        } else {
+            binding.ivPhotoPreview.visibility = View.GONE
+            binding.btnRemovePhoto.visibility = View.GONE
+            binding.btnPickPhoto.text = "Foto wählen"
+        }
+    }
+
     private fun pickDate(title: String, current: LocalDate?, onPicked: (LocalDate) -> Unit) {
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(title)
-            .setSelection(
-                (current ?: LocalDate.now()).toEpochDay() * MILLIS_PER_DAY
-            )
+            .setSelection((current ?: LocalDate.now()).toEpochDay() * MILLIS_PER_DAY)
             .build()
         picker.addOnPositiveButtonClickListener { utcMillis ->
             onPicked(Instant.ofEpochMilli(utcMillis).atZone(ZoneOffset.UTC).toLocalDate())
@@ -142,6 +189,12 @@ class SettingsActivity : AppCompatActivity() {
         prefs.weddingDate = weddingDate
         prefs.notifyHour = hour
         prefs.notifyMinute = minute
+        prefs.photoUri = photoUri
+        prefs.photoStyle = when (binding.groupPhotoStyle.checkedButtonId) {
+            R.id.btnStyleBackground -> PhotoStyle.BACKGROUND
+            R.id.btnStyleAvatar -> PhotoStyle.AVATAR
+            else -> PhotoStyle.BANNER
+        }
         prefs.preWarnDays = if (binding.swPreWarn.isChecked) {
             when (binding.groupPreWarn.checkedButtonId) {
                 R.id.btnWarn3 -> 3

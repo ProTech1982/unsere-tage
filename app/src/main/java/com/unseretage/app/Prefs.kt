@@ -46,6 +46,19 @@ class Prefs(context: Context) {
         get() = sp.getBoolean(KEY_MONTHLY, false)
         set(v) = sp.edit().putBoolean(KEY_MONTHLY, v).apply()
 
+    /** Uri des gewaehlten Fotos, als String gespeichert. */
+    var photoUri: String?
+        get() = sp.getString(KEY_PHOTO_URI, null)
+        set(v) {
+            val e = sp.edit()
+            if (v == null) e.remove(KEY_PHOTO_URI) else e.putString(KEY_PHOTO_URI, v)
+            e.apply()
+        }
+
+    var photoStyle: PhotoStyle
+        get() = PhotoStyle.fromKey(sp.getString(KEY_PHOTO_STYLE, null))
+        set(v) = sp.edit().putString(KEY_PHOTO_STYLE, v.key).apply()
+
     val isConfigured: Boolean
         get() = meetDate != null || weddingDate != null
 
@@ -70,5 +83,7 @@ class Prefs(context: Context) {
         const val KEY_PREWARN = "prewarn_days"
         const val KEY_MILESTONES = "milestones"
         const val KEY_MONTHLY = "monthly"
+        const val KEY_PHOTO_URI = "photo_uri"
+        const val KEY_PHOTO_STYLE = "photo_style"
     }
 }
