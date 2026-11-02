@@ -1,5 +1,16 @@
 # Änderungsverlauf
 
+## 1.1 — 2. November 2026
+
+- Helligkeit frei wählbar: hell, dunkel oder der Systemeinstellung
+  folgend. Bisher richtete sich die App immer nach dem System.
+- Meilensteine in drei Arten, einzeln an- und abschaltbar:
+  - **Schnapszahlen** wie 111, 666, 777 oder 1111
+  - **Tausender** wie 1000 oder 2000
+  - **Hunderter** wie 100 oder 200
+  Die Karte auf der Startseite zeigt immer den nächsten fälligen
+  Meilenstein und benennt, um welche Art es sich handelt.
+
 ## 1.0 — 2. November 2026
 
 Erste vollwertige Version. Ab hier tragen alle Builds denselben

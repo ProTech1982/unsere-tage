@@ -15,16 +15,15 @@ object Reminders {
         addAnniversaryReminders(out, prefs, today, prefs.meetDate, "Jahrestag", "zusammen", couple)
         addAnniversaryReminders(out, prefs, today, prefs.weddingDate, "Hochzeitstag", "verheiratet", couple)
 
-        if (prefs.milestonesEnabled) {
-            val base = prefs.meetDate ?: prefs.weddingDate
-            if (base != null) {
-                val days = DateMath.totalDays(base, today)
-                if (days > 0 && days % 1000L == 0L) {
-                    out += Reminder(
-                        "${DateMath.formatNumber(days)} gemeinsame Tage",
-                        "${couple}Heute sind es ${DateMath.formatNumber(days)} gemeinsame Tage."
-                    )
-                }
+        val milestoneBase = prefs.meetDate ?: prefs.weddingDate
+        if (milestoneBase != null) {
+            val days = DateMath.totalDays(milestoneBase, today)
+            val milestone = Milestones.onDay(prefs, days)
+            if (milestone != null) {
+                out += Reminder(
+                    "${milestone.label}: ${DateMath.formatNumber(milestone.days)} Tage",
+                    "${couple}Heute sind es ${DateMath.formatNumber(milestone.days)} gemeinsame Tage."
+                )
             }
         }
 

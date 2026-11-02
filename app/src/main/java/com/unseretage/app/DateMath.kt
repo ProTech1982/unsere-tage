@@ -49,14 +49,6 @@ object DateMath {
         return ((done * 100) / span).toInt()
     }
 
-    /** Nächster Tausender-Meilenstein, z. B. 5000 Tage. */
-    fun nextMilestone(totalDays: Long): Long = (totalDays / 1000 + 1) * 1000
-
-    fun daysUntilMilestone(from: LocalDate, today: LocalDate): Long {
-        val done = totalDays(from, today)
-        return nextMilestone(done) - done
-    }
-
     /** "12 Jahre, 3 Monate und 5 Tage" */
     fun formatPeriod(period: Period): String {
         val parts = mutableListOf<String>()

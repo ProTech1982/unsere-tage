@@ -239,12 +239,34 @@
                 android:text="14 Tage" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/swMilestones"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Meilensteine (alle 1000 Tage)" />
+            android:layout_marginTop="22dp"
+            android:textSize="13sp"
+            android:alpha="0.7"
+            android:text="Welche Meilensteine sollen gemeldet werden?" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swMsRepdigits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Schnapszahlen (111, 777, 1111 …)" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swMsThousands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Tausender (1000, 2000 …)" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swMsHundreds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Hunderter (100, 200 …)" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/swMonthly"
@@ -311,6 +333,53 @@
                     app:trackThickness="6dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textSize="13sp"
+            android:alpha="0.7"
+            android:text="Helligkeit" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/groupTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnThemeLight"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="Hell" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnThemeDark"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="Dunkel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnThemeSystem"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:text="System" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <TextView
             android:layout_width="match_parent"

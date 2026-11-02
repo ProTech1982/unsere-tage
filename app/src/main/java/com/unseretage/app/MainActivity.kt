@@ -208,17 +208,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderMilestone(prefs: Prefs, today: LocalDate) {
         val base = prefs.meetDate ?: prefs.weddingDate
-        if (base == null || !prefs.milestonesEnabled) {
+        val milestone = base?.let { Milestones.next(prefs, DateMath.totalDays(it, today)) }
+
+        if (base == null || milestone == null) {
             binding.cardMilestone.visibility = View.GONE
             return
         }
+
         val done = DateMath.totalDays(base, today)
-        val target = DateMath.nextMilestone(done)
-        val until = target - done
-        val reachedOn = base.plusDays(target)
+        val until = milestone.days - done
+        val reachedOn = base.plusDays(milestone.days)
         binding.cardMilestone.visibility = View.VISIBLE
-        binding.tvMilestone.text =
-            "${DateMath.formatNumber(target)} gemeinsame Tage am ${reachedOn.format(dateFormat)} – ${DateMath.formatDays(until)}."
+        binding.tvMilestone.text = "${milestone.label}: ${DateMath.formatNumber(milestone.days)} " +
+            "gemeinsame Tage am ${reachedOn.format(dateFormat)} \u2013 ${DateMath.formatDays(until)}."
     }
 
     /** Zaehlt die grosse Zahl kurz hoch, sofern Animationen eingeschaltet sind. */

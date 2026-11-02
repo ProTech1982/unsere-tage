@@ -1,6 +1,6 @@
 # Unsere Tage
 
-Aktuelle Version: **1.0**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
+Aktuelle Version: **1.1**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
 
 Eine kleine Android-App, die mitzählt, wie lange ihr euch schon kennt und
 wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.
@@ -14,6 +14,7 @@ wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.
 - Optional Monatsjubiläen
 - Uhrzeit der Erinnerung frei wählbar
 - Erinnerungen überstehen einen Handy-Neustart
+- Helligkeit wählbar: hell, dunkel oder systemabhängig
 - Eigenes Foto, wahlweise groß oben, als Seitenhintergrund oder als rundes Symbol
 - Update-Knopf: prüft auf GitHub nach einer neueren Version, lädt sie und
   startet die Installation

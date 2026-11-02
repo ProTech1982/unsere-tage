@@ -38,9 +38,26 @@ class Prefs(context: Context) {
         get() = sp.getInt(KEY_PREWARN, 7)
         set(v) = sp.edit().putInt(KEY_PREWARN, v).apply()
 
-    var milestonesEnabled: Boolean
+    /** Alter Schalter aus Version 1.0, dient jetzt als Vorgabe fuer die Tausender. */
+    private val legacyMilestones: Boolean
         get() = sp.getBoolean(KEY_MILESTONES, true)
-        set(v) = sp.edit().putBoolean(KEY_MILESTONES, v).apply()
+
+    var milestoneHundreds: Boolean
+        get() = sp.getBoolean(KEY_MS_HUNDRED, false)
+        set(v) = sp.edit().putBoolean(KEY_MS_HUNDRED, v).apply()
+
+    var milestoneThousands: Boolean
+        get() = sp.getBoolean(KEY_MS_THOUSAND, legacyMilestones)
+        set(v) = sp.edit().putBoolean(KEY_MS_THOUSAND, v).apply()
+
+    var milestoneRepdigits: Boolean
+        get() = sp.getBoolean(KEY_MS_REPDIGIT, true)
+        set(v) = sp.edit().putBoolean(KEY_MS_REPDIGIT, v).apply()
+
+    /** "light", "dark" oder "system". */
+    var themeMode: String
+        get() = sp.getString(KEY_THEME_MODE, "system") ?: "system"
+        set(v) = sp.edit().putString(KEY_THEME_MODE, v).apply()
 
     var monthlyEnabled: Boolean
         get() = sp.getBoolean(KEY_MONTHLY, false)
@@ -103,5 +120,9 @@ class Prefs(context: Context) {
         const val KEY_CARD_CORNER = "card_corner"
         const val KEY_CARD_OPACITY = "card_opacity"
         const val KEY_ACCENT = "accent_color"
+        const val KEY_MS_HUNDRED = "milestone_hundreds"
+        const val KEY_MS_THOUSAND = "milestone_thousands"
+        const val KEY_MS_REPDIGIT = "milestone_repdigits"
+        const val KEY_THEME_MODE = "theme_mode"
     }
 }

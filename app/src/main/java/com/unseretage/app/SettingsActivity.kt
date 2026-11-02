@@ -38,6 +38,7 @@ class SettingsActivity : AppCompatActivity() {
     private var cornerDp = 24
     private var opacity = 100
     private var accent = Theming.DEFAULT_ACCENT
+    private var themeMode = "system"
     private val swatches = mutableListOf<View>()
 
     private val pickPhoto =
@@ -85,6 +86,15 @@ class SettingsActivity : AppCompatActivity() {
                 else -> Theming.SHAPES[1].second
             }
             updatePreview()
+        }
+
+        binding.groupTheme.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            themeMode = when (checkedId) {
+                R.id.btnThemeLight -> "light"
+                R.id.btnThemeDark -> "dark"
+                else -> "system"
+            }
         }
 
         binding.sliderOpacity.addOnChangeListener { _, value, _ ->
@@ -147,7 +157,18 @@ class SettingsActivity : AppCompatActivity() {
             }
         )
 
-        binding.swMilestones.isChecked = prefs.milestonesEnabled
+        binding.swMsRepdigits.isChecked = prefs.milestoneRepdigits
+        binding.swMsThousands.isChecked = prefs.milestoneThousands
+        binding.swMsHundreds.isChecked = prefs.milestoneHundreds
+
+        themeMode = prefs.themeMode
+        binding.groupTheme.check(
+            when (themeMode) {
+                "light" -> R.id.btnThemeLight
+                "dark" -> R.id.btnThemeDark
+                else -> R.id.btnThemeSystem
+            }
+        )
         binding.swMonthly.isChecked = prefs.monthlyEnabled
 
         updateDateButtons()
@@ -243,7 +264,11 @@ class SettingsActivity : AppCompatActivity() {
         prefs.cardCornerDp = cornerDp
         prefs.cardOpacity = opacity
         prefs.accentColor = accent
-        prefs.milestonesEnabled = binding.swMilestones.isChecked
+        prefs.milestoneRepdigits = binding.swMsRepdigits.isChecked
+        prefs.milestoneThousands = binding.swMsThousands.isChecked
+        prefs.milestoneHundreds = binding.swMsHundreds.isChecked
+        prefs.themeMode = themeMode
+        App.applyThemeMode(themeMode)
         prefs.monthlyEnabled = binding.swMonthly.isChecked
 
         AlarmScheduler.scheduleNext(this)
