@@ -46,7 +46,7 @@ jobs:
       - name: APK bauen
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'unseretage' }}
           KEY_ALIAS: unseretage
         run: gradle assembleRelease --no-daemon --stacktrace
 
