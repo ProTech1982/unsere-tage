@@ -30,8 +30,6 @@ class MainActivity : AppCompatActivity() {
     private val askNotifications =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
-    private var pendingPageUrl: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -41,8 +39,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSettings.setOnClickListener { openSettings() }
         binding.btnSetup.setOnClickListener { openSettings() }
-        binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
-        binding.btnInstallUpdate.setOnClickListener { openUpdatePage() }
 
         requestNotificationPermissionIfNeeded()
     }
@@ -92,9 +88,6 @@ class MainActivity : AppCompatActivity() {
 
         renderMilestone(prefs, today)
 
-        binding.tvVersion.text =
-            "Version ${Updater.installedName(this)} installiert (Build ${Updater.installedBuild(this)})"
-
         binding.tvNotifyInfo.text = if (prefs.isConfigured) {
             String.format(Locale.GERMANY, "Erinnerungen um %02d:%02d Uhr", prefs.notifyHour, prefs.notifyMinute)
         } else {
@@ -123,8 +116,7 @@ class MainActivity : AppCompatActivity() {
             binding.cardSetup,
             binding.cardMeet.root,
             binding.cardWedding.root,
-            binding.cardMilestone,
-            binding.cardUpdate
+            binding.cardMilestone
         ).forEach { Theming.applyCard(it, corner, opacity) }
 
         listOf(binding.cardMeet, binding.cardWedding).forEach { card ->
@@ -133,7 +125,6 @@ class MainActivity : AppCompatActivity() {
             card.progressYear.trackColor = track
         }
 
-        binding.btnInstallUpdate.backgroundTintList = accentTint
         binding.btnSetup.backgroundTintList = accentTint
     }
 
@@ -240,44 +231,4 @@ class MainActivity : AppCompatActivity() {
     private fun animationsOn(): Boolean = runCatching {
         Settings.Global.getFloat(contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0f
     }.getOrDefault(true)
-
-    // ---------- Update ----------
-
-    private fun checkForUpdate() {
-        binding.btnCheckUpdate.isEnabled = false
-        binding.btnInstallUpdate.visibility = View.GONE
-        showStatus("Suche nach einer neuen Version \u2026")
-
-        Updater.check(this) { result ->
-            binding.btnCheckUpdate.isEnabled = true
-            when (result) {
-                is Updater.CheckResult.Available -> {
-                    pendingPageUrl = result.pageUrl
-                    showStatus("${result.name} ist verfügbar. Die Seite öffnet im Browser, " +
-                        "dort auf UnsereTage.apk tippen und die Datei öffnen.")
-                    binding.btnInstallUpdate.text = "Download öffnen"
-                    binding.btnInstallUpdate.visibility = View.VISIBLE
-                }
-                Updater.CheckResult.UpToDate ->
-                    showStatus("Du hast bereits die neueste Version.")
-                is Updater.CheckResult.NeedsBrowser -> {
-                    pendingPageUrl = null
-                    showStatus(result.reason)
-                    binding.btnInstallUpdate.text = "Im Browser öffnen"
-                    binding.btnInstallUpdate.visibility = View.VISIBLE
-                }
-                is Updater.CheckResult.Failed ->
-                    showStatus(result.reason)
-            }
-        }
-    }
-
-    private fun openUpdatePage() {
-        Updater.openReleasesPage(this, pendingPageUrl)
-    }
-
-    private fun showStatus(text: String) {
-        binding.tvUpdateStatus.text = text
-        binding.tvUpdateStatus.visibility = View.VISIBLE
-    }
 }

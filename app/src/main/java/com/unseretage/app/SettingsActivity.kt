@@ -39,6 +39,7 @@ class SettingsActivity : AppCompatActivity() {
     private var opacity = 100
     private var accent = Theming.DEFAULT_ACCENT
     private var themeMode = "system"
+    private var pendingPageUrl: String? = null
     private val swatches = mutableListOf<View>()
 
     private val pickPhoto =
@@ -106,6 +107,13 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.swPreWarn.setOnCheckedChangeListener { _, checked ->
             binding.groupPreWarn.visibility = if (checked) View.VISIBLE else View.GONE
+        }
+
+        binding.tvVersion.text =
+            "Version ${Updater.installedName(this)} installiert (Build ${Updater.installedBuild(this)})"
+        binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
+        binding.btnInstallUpdate.setOnClickListener {
+            Updater.openReleasesPage(this, pendingPageUrl)
         }
 
         binding.btnSave.setOnClickListener { save() }
@@ -335,6 +343,44 @@ class SettingsActivity : AppCompatActivity() {
         )
         binding.tvOpacityValue.text = "$opacity %"
         Theming.applyCard(binding.cardPreview, cornerDp, opacity)
+    }
+
+    // ---------- Update ----------
+
+    private fun checkForUpdate() {
+        binding.btnCheckUpdate.isEnabled = false
+        binding.btnInstallUpdate.visibility = View.GONE
+        showUpdateStatus("Suche nach einer neuen Version \u2026")
+
+        Updater.check(this) { result ->
+            binding.btnCheckUpdate.isEnabled = true
+            when (result) {
+                is Updater.CheckResult.Available -> {
+                    pendingPageUrl = result.pageUrl
+                    showUpdateStatus(
+                        "${result.name} ist verfügbar. Die Seite öffnet im Browser, " +
+                            "dort auf UnsereTage.apk tippen und die Datei öffnen."
+                    )
+                    binding.btnInstallUpdate.text = "Download öffnen"
+                    binding.btnInstallUpdate.visibility = View.VISIBLE
+                }
+                Updater.CheckResult.UpToDate ->
+                    showUpdateStatus("Du hast bereits die neueste Version.")
+                is Updater.CheckResult.NeedsBrowser -> {
+                    pendingPageUrl = null
+                    showUpdateStatus(result.reason)
+                    binding.btnInstallUpdate.text = "Im Browser öffnen"
+                    binding.btnInstallUpdate.visibility = View.VISIBLE
+                }
+                is Updater.CheckResult.Failed ->
+                    showUpdateStatus(result.reason)
+            }
+        }
+    }
+
+    private fun showUpdateStatus(text: String) {
+        binding.tvUpdateStatus.text = text
+        binding.tvUpdateStatus.visibility = View.VISIBLE
     }
 
     private companion object {

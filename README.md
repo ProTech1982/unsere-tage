@@ -1,6 +1,6 @@
 # Unsere Tage
 
-Aktuelle Version: **1.2**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
+Aktuelle Version: **1.3**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
 
 Eine kleine Android-App, die mitzählt, wie lange ihr euch schon kennt und
 wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.

@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## 1.3 — 2. November 2026
+
+- Versionsanzeige und Update-Suche sind von der Startseite in die
+  Einstellungen gewandert, ganz nach unten. Die Startseite zeigt jetzt
+  nur noch eure Tage.
+
 ## 1.2 — 2. November 2026
 
 Play Protect hatte die App als möglicherweise gefährlich eingestuft.
