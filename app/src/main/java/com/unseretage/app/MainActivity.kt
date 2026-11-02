@@ -92,7 +92,8 @@ class MainActivity : AppCompatActivity() {
 
         renderMilestone(prefs, today)
 
-        binding.tvVersion.text = "Version 1.${Updater.installedBuild(this)} installiert"
+        binding.tvVersion.text =
+            "Version ${Updater.installedName(this)} installiert (Build ${Updater.installedBuild(this)})"
 
         binding.tvNotifyInfo.text = if (prefs.isConfigured) {
             String.format(Locale.GERMANY, "Erinnerungen um %02d:%02d Uhr", prefs.notifyHour, prefs.notifyMinute)
@@ -252,8 +253,8 @@ class MainActivity : AppCompatActivity() {
             when (result) {
                 is Updater.CheckResult.Available -> {
                     pendingApkUrl = result.apkUrl
-                    showStatus("Version 1.${result.build} ist verfügbar.")
-                    binding.btnInstallUpdate.text = "Version 1.${result.build} installieren"
+                    showStatus("${result.name} ist verfügbar.")
+                    binding.btnInstallUpdate.text = "Jetzt installieren"
                     binding.btnInstallUpdate.visibility = View.VISIBLE
                 }
                 Updater.CheckResult.UpToDate ->

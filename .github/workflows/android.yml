@@ -51,18 +51,23 @@ jobs:
         run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: APK umbenennen
+        id: apk
         run: |
           mkdir -p out
           cp app/build/outputs/apk/release/app-release.apk out/UnsereTage.apk
+          version=$(grep '^appVersionName=' gradle.properties | cut -d= -f2)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Als Download bereitstellen
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
-          name: Unsere Tage - Build ${{ github.run_number }}
+          name: Unsere Tage ${{ steps.apk.outputs.version }} (Build ${{ github.run_number }})
           body: |
-            Fertige APK zum Installieren auf dem Handy.
+            Version ${{ steps.apk.outputs.version }}, Build ${{ github.run_number }}.
+
             Unten auf **UnsereTage.apk** tippen, herunterladen und oeffnen.
+            Aenderungen stehen in [CHANGELOG.md](../blob/main/CHANGELOG.md).
           files: out/UnsereTage.apk
 
       - name: Auch als Artefakt ablegen

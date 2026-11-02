@@ -40,6 +40,11 @@ object Updater {
         data class Failed(val reason: String) : CheckResult()
     }
 
+    /** Die sichtbare Versionsnummer, z. B. "1.0". */
+    fun installedName(context: Context): String = runCatching {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "?"
+    }.getOrDefault("?")
+
     fun installedBuild(context: Context): Int = runCatching {
         val info = context.packageManager.getPackageInfo(context.packageName, 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

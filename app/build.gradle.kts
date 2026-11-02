@@ -20,9 +20,12 @@ android {
         targetSdk = 35
         // Die Build-Nummer von GitHub Actions wird zur Versionsnummer,
         // damit die App neue Releases erkennen kann.
+        // versionCode zaehlt mit jedem Build hoch, damit die App ein neues
+        // Release erkennt. versionName ist die Nummer, die der Nutzer sieht,
+        // und wird in gradle.properties von Hand gepflegt.
         val build = (System.getenv("BUILD_NUMBER") ?: "1").toIntOrNull() ?: 1
         versionCode = build
-        versionName = "1.$build"
+        versionName = (project.findProperty("appVersionName") as String?) ?: "1.0"
     }
 
     if (signingReady) {
