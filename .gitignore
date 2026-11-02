@@ -6,3 +6,6 @@ build/
 captures/
 .externalNativeBuild/
 .cxx/
+
+# Signaturschluessel bleibt ausserhalb des Repositories
+keystore/*.jks
