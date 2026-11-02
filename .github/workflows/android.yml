@@ -1,0 +1,55 @@
+name: APK bauen
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code holen
+        uses: actions/checkout@v4
+
+      - name: Java 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK einrichten
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle einrichten
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: APK bauen
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: APK umbenennen
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/debug/app-debug.apk out/UnsereTage.apk
+
+      - name: Als Download bereitstellen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Unsere Tage - Build ${{ github.run_number }}
+          body: |
+            Fertige APK zum Installieren auf dem Handy.
+            Unten auf **UnsereTage.apk** tippen, herunterladen und oeffnen.
+          files: out/UnsereTage.apk
+
+      - name: Auch als Artefakt ablegen
+        uses: actions/upload-artifact@v4
+        with:
+          name: UnsereTage-APK
+          path: out/UnsereTage.apk
