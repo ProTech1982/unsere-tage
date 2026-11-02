@@ -1,5 +1,21 @@
 # Änderungsverlauf
 
+## 1.2 — 2. November 2026
+
+Play Protect hatte die App als möglicherweise gefährlich eingestuft.
+Auslöser war die Berechtigung, andere Apps zu installieren, gemeinsam
+mit dem Internetzugriff — dasselbe Muster, das Schadsoftware benutzt,
+um im Hintergrund etwas nachzuladen.
+
+- Die Berechtigung `REQUEST_INSTALL_PACKAGES` ist entfernt, ebenso der
+  eingebaute Download und der FileProvider.
+- Der Update-Knopf prüft weiterhin, ob eine neue Version vorliegt, und
+  öffnet deren Seite im Browser. Herunterladen und Installieren
+  übernimmt der Browser.
+- Es bleiben vier Berechtigungen: Internet (nur für die
+  Versionsabfrage), Benachrichtigungen, Start nach dem Hochfahren und
+  exakte Weckzeiten.
+
 ## 1.1 — 2. November 2026
 
 - Helligkeit frei wählbar: hell, dunkel oder der Systemeinstellung

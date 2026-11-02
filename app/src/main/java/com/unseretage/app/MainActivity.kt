@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val askNotifications =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
-    private var pendingApkUrl: String? = null
+    private var pendingPageUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnSettings.setOnClickListener { openSettings() }
         binding.btnSetup.setOnClickListener { openSettings() }
         binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
-        binding.btnInstallUpdate.setOnClickListener { installUpdate() }
+        binding.btnInstallUpdate.setOnClickListener { openUpdatePage() }
 
         requestNotificationPermissionIfNeeded()
     }
@@ -133,8 +133,6 @@ class MainActivity : AppCompatActivity() {
             card.progressYear.trackColor = track
         }
 
-        binding.progressUpdate.setIndicatorColor(readable)
-        binding.progressUpdate.trackColor = track
         binding.btnInstallUpdate.backgroundTintList = accentTint
         binding.btnSetup.backgroundTintList = accentTint
     }
@@ -248,24 +246,25 @@ class MainActivity : AppCompatActivity() {
     private fun checkForUpdate() {
         binding.btnCheckUpdate.isEnabled = false
         binding.btnInstallUpdate.visibility = View.GONE
-        showStatus("Suche nach einer neuen Version …")
+        showStatus("Suche nach einer neuen Version \u2026")
 
         Updater.check(this) { result ->
             binding.btnCheckUpdate.isEnabled = true
             when (result) {
                 is Updater.CheckResult.Available -> {
-                    pendingApkUrl = result.apkUrl
-                    showStatus("${result.name} ist verfügbar.")
-                    binding.btnInstallUpdate.text = "Jetzt installieren"
+                    pendingPageUrl = result.pageUrl
+                    showStatus("${result.name} ist verfügbar. Die Seite öffnet im Browser, " +
+                        "dort auf UnsereTage.apk tippen und die Datei öffnen.")
+                    binding.btnInstallUpdate.text = "Download öffnen"
                     binding.btnInstallUpdate.visibility = View.VISIBLE
                 }
                 Updater.CheckResult.UpToDate ->
                     showStatus("Du hast bereits die neueste Version.")
                 is Updater.CheckResult.NeedsBrowser -> {
+                    pendingPageUrl = null
                     showStatus(result.reason)
                     binding.btnInstallUpdate.text = "Im Browser öffnen"
                     binding.btnInstallUpdate.visibility = View.VISIBLE
-                    pendingApkUrl = null
                 }
                 is Updater.CheckResult.Failed ->
                     showStatus(result.reason)
@@ -273,34 +272,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun installUpdate() {
-        val url = pendingApkUrl
-        if (url == null) {
-            Updater.openReleasesPage(this)
-            return
-        }
-
-        binding.btnInstallUpdate.isEnabled = false
-        binding.progressUpdate.visibility = View.VISIBLE
-        binding.progressUpdate.isIndeterminate = true
-        showStatus("Lade herunter …")
-
-        Updater.downloadAndInstall(
-            context = this,
-            apkUrl = url,
-            onProgress = { percent ->
-                if (percent >= 0) {
-                    binding.progressUpdate.isIndeterminate = false
-                    binding.progressUpdate.setProgressCompat(percent, true)
-                    if (percent >= 100) showStatus("Installation wird geöffnet …")
-                }
-            },
-            onError = { message ->
-                binding.btnInstallUpdate.isEnabled = true
-                binding.progressUpdate.visibility = View.GONE
-                showStatus(message)
-            }
-        )
+    private fun openUpdatePage() {
+        Updater.openReleasesPage(this, pendingPageUrl)
     }
 
     private fun showStatus(text: String) {

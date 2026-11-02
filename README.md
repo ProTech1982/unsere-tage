@@ -1,6 +1,6 @@
 # Unsere Tage
 
-Aktuelle Version: **1.1**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
+Aktuelle Version: **1.2**. Der Verlauf steht in [CHANGELOG.md](CHANGELOG.md).
 
 Eine kleine Android-App, die mitzählt, wie lange ihr euch schon kennt und
 wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.
@@ -16,8 +16,8 @@ wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.
 - Erinnerungen überstehen einen Handy-Neustart
 - Helligkeit wählbar: hell, dunkel oder systemabhängig
 - Eigenes Foto, wahlweise groß oben, als Seitenhintergrund oder als rundes Symbol
-- Update-Knopf: prüft auf GitHub nach einer neueren Version, lädt sie und
-  startet die Installation
+- Update-Knopf: prüft auf GitHub nach einer neueren Version und öffnet
+  deren Download-Seite im Browser
 - Anpassbares Aussehen: Kachelform, Deckkraft der Kacheln und Akzentfarbe,
   mit Live-Vorschau in den Einstellungen
 
@@ -54,5 +54,8 @@ dann kommt die Meldung auf die Minute genau.
 
 - Kotlin, Views mit Material 3, kein Compose
 - minSdk 26 (Android 8), targetSdk 35
-- Keine Internetberechtigung, keine Konten, alles bleibt auf dem Handy
+- Internetzugriff nur für die Versionsabfrage bei GitHub, keine Konten,
+  alle Daten bleiben auf dem Handy
+- Keine Berechtigung zum Installieren anderer Apps — sonst warnt
+  Play Protect zu Recht
 - Build über GitHub Actions, Debug-Signatur
