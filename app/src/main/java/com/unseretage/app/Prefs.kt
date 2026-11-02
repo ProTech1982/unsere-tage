@@ -59,6 +59,21 @@ class Prefs(context: Context) {
         get() = PhotoStyle.fromKey(sp.getString(KEY_PHOTO_STYLE, null))
         set(v) = sp.edit().putString(KEY_PHOTO_STYLE, v.key).apply()
 
+    /** Eckenradius der Kacheln in dp. */
+    var cardCornerDp: Int
+        get() = sp.getInt(KEY_CARD_CORNER, 24)
+        set(v) = sp.edit().putInt(KEY_CARD_CORNER, v).apply()
+
+    /** Deckkraft der Kacheln in Prozent, 30..100. */
+    var cardOpacity: Int
+        get() = sp.getInt(KEY_CARD_OPACITY, 100)
+        set(v) = sp.edit().putInt(KEY_CARD_OPACITY, v.coerceIn(30, 100)).apply()
+
+    /** Akzentfarbe als ARGB-Wert. */
+    var accentColor: Int
+        get() = sp.getInt(KEY_ACCENT, Theming.DEFAULT_ACCENT)
+        set(v) = sp.edit().putInt(KEY_ACCENT, v).apply()
+
     val isConfigured: Boolean
         get() = meetDate != null || weddingDate != null
 
@@ -85,5 +100,8 @@ class Prefs(context: Context) {
         const val KEY_MONTHLY = "monthly"
         const val KEY_PHOTO_URI = "photo_uri"
         const val KEY_PHOTO_STYLE = "photo_style"
+        const val KEY_CARD_CORNER = "card_corner"
+        const val KEY_CARD_OPACITY = "card_opacity"
+        const val KEY_ACCENT = "accent_color"
     }
 }

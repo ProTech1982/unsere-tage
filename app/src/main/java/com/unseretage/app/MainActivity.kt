@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.cardSetup.visibility = if (prefs.isConfigured) View.GONE else View.VISIBLE
 
+        applyTheming(prefs)
         applyPhoto(prefs)
 
         bindCounterCard(binding.cardMeet, "Kennengelernt", prefs.meetDate, today, "Jahrestag")
@@ -97,6 +99,43 @@ class MainActivity : AppCompatActivity() {
         } else {
             ""
         }
+    }
+
+    /** Farbe, Kachelform und Transparenz aus den Einstellungen anwenden. */
+    private fun applyTheming(prefs: Prefs) {
+        val accent = prefs.accentColor
+        val corner = prefs.cardCornerDp
+        val opacity = prefs.cardOpacity
+
+        binding.headerBox.background = Theming.headerBackground(this, accent)
+
+        val surface = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorSurface, 0xFFFFFFFF.toInt()
+        )
+        val track = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorSurfaceVariant, 0xFFF8EFF2.toInt()
+        )
+        val readable = Theming.readableOn(accent, surface)
+        val accentTint = ColorStateList.valueOf(accent)
+
+        listOf(
+            binding.cardSetup,
+            binding.cardMeet.root,
+            binding.cardWedding.root,
+            binding.cardMilestone,
+            binding.cardUpdate
+        ).forEach { Theming.applyCard(it, corner, opacity) }
+
+        listOf(binding.cardMeet, binding.cardWedding).forEach { card ->
+            card.tvCardBig.setTextColor(readable)
+            card.progressYear.setIndicatorColor(readable)
+            card.progressYear.trackColor = track
+        }
+
+        binding.progressUpdate.setIndicatorColor(readable)
+        binding.progressUpdate.trackColor = track
+        binding.btnInstallUpdate.backgroundTintList = accentTint
+        binding.btnSetup.backgroundTintList = accentTint
     }
 
     private fun applyPhoto(prefs: Prefs) {

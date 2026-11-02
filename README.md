@@ -15,6 +15,8 @@ wie lange ihr verheiratet seid – und rechtzeitig daran erinnert.
 - Eigenes Foto, wahlweise groß oben, als Seitenhintergrund oder als rundes Symbol
 - Update-Knopf: prüft auf GitHub nach einer neueren Version, lädt sie und
   startet die Installation
+- Anpassbares Aussehen: Kachelform, Deckkraft der Kacheln und Akzentfarbe,
+  mit Live-Vorschau in den Einstellungen
 
 Namen und Daten trägst du direkt in der App ein (Knopf "Einstellungen").
 Es muss also nie neu gebaut werden, wenn sich etwas ändert.

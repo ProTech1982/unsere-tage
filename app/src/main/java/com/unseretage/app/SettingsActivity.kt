@@ -3,10 +3,12 @@ package com.unseretage.app
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +35,10 @@ class SettingsActivity : AppCompatActivity() {
     private var hour = 9
     private var minute = 0
     private var photoUri: String? = null
+    private var cornerDp = 24
+    private var opacity = 100
+    private var accent = Theming.DEFAULT_ACCENT
+    private val swatches = mutableListOf<View>()
 
     private val pickPhoto =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -71,6 +77,23 @@ class SettingsActivity : AppCompatActivity() {
             updatePhotoViews()
         }
 
+        binding.groupShape.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            cornerDp = when (checkedId) {
+                R.id.btnShapeSharp -> Theming.SHAPES[0].second
+                R.id.btnShapeRound -> Theming.SHAPES[2].second
+                else -> Theming.SHAPES[1].second
+            }
+            updatePreview()
+        }
+
+        binding.sliderOpacity.addOnChangeListener { _, value, _ ->
+            opacity = value.toInt()
+            updatePreview()
+        }
+
+        buildColorRow()
+
         binding.swPreWarn.setOnCheckedChangeListener { _, checked ->
             binding.groupPreWarn.visibility = if (checked) View.VISIBLE else View.GONE
         }
@@ -92,6 +115,18 @@ class SettingsActivity : AppCompatActivity() {
         hour = prefs.notifyHour
         minute = prefs.notifyMinute
         photoUri = prefs.photoUri
+        cornerDp = prefs.cardCornerDp
+        opacity = prefs.cardOpacity
+        accent = prefs.accentColor
+
+        binding.groupShape.check(
+            when (cornerDp) {
+                Theming.SHAPES[0].second -> R.id.btnShapeSharp
+                Theming.SHAPES[2].second -> R.id.btnShapeRound
+                else -> R.id.btnShapeSoft
+            }
+        )
+        binding.sliderOpacity.value = opacity.toFloat().coerceIn(30f, 100f)
 
         binding.groupPhotoStyle.check(
             when (prefs.photoStyle) {
@@ -118,6 +153,7 @@ class SettingsActivity : AppCompatActivity() {
         updateDateButtons()
         updateTimeButton()
         updatePhotoViews()
+        updatePreview()
     }
 
     private fun updateDateButtons() {
@@ -204,12 +240,76 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             0
         }
+        prefs.cardCornerDp = cornerDp
+        prefs.cardOpacity = opacity
+        prefs.accentColor = accent
         prefs.milestonesEnabled = binding.swMilestones.isChecked
         prefs.monthlyEnabled = binding.swMonthly.isChecked
 
         AlarmScheduler.scheduleNext(this)
         Toast.makeText(this, "Gespeichert", Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    // ---------- Aussehen ----------
+
+    private fun buildColorRow() {
+        val row: LinearLayout = binding.colorRow
+        row.removeAllViews()
+        swatches.clear()
+
+        val size = (46 * resources.displayMetrics.density).toInt()
+        val gap = (10 * resources.displayMetrics.density).toInt()
+
+        Theming.ACCENTS.forEach { (name, color) ->
+            val swatch = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(size, size).also {
+                    it.marginEnd = gap
+                }
+                contentDescription = name
+                tag = color
+                setOnClickListener {
+                    accent = color
+                    paintSwatches()
+                    updatePreview()
+                }
+            }
+            row.addView(swatch)
+            swatches += swatch
+        }
+        paintSwatches()
+    }
+
+    private fun paintSwatches() {
+        val ring = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorOnSurface, 0xFF2A1F23.toInt()
+        )
+        val strokeWidth = (3 * resources.displayMetrics.density).toInt()
+
+        swatches.forEach { swatch ->
+            val color = swatch.tag as Int
+            val drawable = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(color)
+                if (color == accent) setStroke(strokeWidth, ring)
+            }
+            swatch.background = drawable
+        }
+    }
+
+    private fun updatePreview() {
+        val surface = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorSurface, 0xFFFFFFFF.toInt()
+        )
+        val readable = Theming.readableOn(accent, surface)
+
+        binding.tvPreviewNumber.setTextColor(readable)
+        binding.progressPreview.setIndicatorColor(readable)
+        binding.progressPreview.trackColor = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorSurfaceVariant, 0xFFF8EFF2.toInt()
+        )
+        binding.tvOpacityValue.text = "$opacity %"
+        Theming.applyCard(binding.cardPreview, cornerDp, opacity)
     }
 
     private companion object {
