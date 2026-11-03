@@ -649,7 +649,7 @@
             android:valueFrom="5"
             android:valueTo="100"
             android:stepSize="5"
-            android:value="14" />
+            android:value="15" />
 
         <TextView
             android:layout_width="match_parent"

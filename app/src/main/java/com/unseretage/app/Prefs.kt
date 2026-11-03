@@ -101,10 +101,10 @@ class Prefs(context: Context) {
         get() = sp.getInt(KEY_HEADER_PATTERN_COLOR, PatternColors.DEFAULT_ON_HEADER)
         set(v) = sp.edit().putInt(KEY_HEADER_PATTERN_COLOR, v).apply()
 
-    /** Staerke des Musters in Prozent, 5..100. */
+    /** Staerke des Musters in Prozent, 5..100, immer in Schritten von 5. */
     var headerPatternStrength: Int
-        get() = sp.getInt(KEY_HEADER_PATTERN_STRENGTH, 20)
-        set(v) = sp.edit().putInt(KEY_HEADER_PATTERN_STRENGTH, v.coerceIn(5, 100)).apply()
+        get() = snapStrength(sp.getInt(KEY_HEADER_PATTERN_STRENGTH, 20))
+        set(v) = sp.edit().putInt(KEY_HEADER_PATTERN_STRENGTH, snapStrength(v)).apply()
 
     /* --- Muster im Seitenhintergrund --- */
 
@@ -116,13 +116,21 @@ class Prefs(context: Context) {
         get() = sp.getInt(KEY_BG_PATTERN_COLOR, Theming.DEFAULT_ACCENT)
         set(v) = sp.edit().putInt(KEY_BG_PATTERN_COLOR, v).apply()
 
-    /** Staerke des Musters in Prozent, 5..100. */
+    /** Staerke des Musters in Prozent, 5..100, immer in Schritten von 5. */
     var backgroundPatternStrength: Int
-        get() = sp.getInt(KEY_BG_PATTERN_STRENGTH, 14)
-        set(v) = sp.edit().putInt(KEY_BG_PATTERN_STRENGTH, v.coerceIn(5, 100)).apply()
+        get() = snapStrength(sp.getInt(KEY_BG_PATTERN_STRENGTH, 15))
+        set(v) = sp.edit().putInt(KEY_BG_PATTERN_STRENGTH, snapStrength(v)).apply()
 
     val isConfigured: Boolean
         get() = meetDate != null || weddingDate != null
+
+    /**
+     * Der Regler in den Einstellungen laeuft in Schritten von 5 ab 5.
+     * Ein Wert dazwischen laesst Material eine Ausnahme werfen, deshalb
+     * wird hier gerundet - auch fuer Werte, die schon gespeichert sind.
+     */
+    private fun snapStrength(value: Int): Int =
+        ((value + 2) / 5 * 5).coerceIn(5, 100)
 
     private fun readDate(key: String): LocalDate? {
         val epochDay = sp.getLong(key, Long.MIN_VALUE)
