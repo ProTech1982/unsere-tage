@@ -91,6 +91,36 @@ class Prefs(context: Context) {
         get() = sp.getInt(KEY_ACCENT, Theming.DEFAULT_ACCENT)
         set(v) = sp.edit().putInt(KEY_ACCENT, v).apply()
 
+    /* --- Muster im Kopfbereich --- */
+
+    var headerPattern: Pattern
+        get() = Pattern.fromKey(sp.getString(KEY_HEADER_PATTERN, null))
+        set(v) = sp.edit().putString(KEY_HEADER_PATTERN, v.key).apply()
+
+    var headerPatternColor: Int
+        get() = sp.getInt(KEY_HEADER_PATTERN_COLOR, PatternColors.DEFAULT_ON_HEADER)
+        set(v) = sp.edit().putInt(KEY_HEADER_PATTERN_COLOR, v).apply()
+
+    /** Staerke des Musters in Prozent, 5..100. */
+    var headerPatternStrength: Int
+        get() = sp.getInt(KEY_HEADER_PATTERN_STRENGTH, 20)
+        set(v) = sp.edit().putInt(KEY_HEADER_PATTERN_STRENGTH, v.coerceIn(5, 100)).apply()
+
+    /* --- Muster im Seitenhintergrund --- */
+
+    var backgroundPattern: Pattern
+        get() = Pattern.fromKey(sp.getString(KEY_BG_PATTERN, null))
+        set(v) = sp.edit().putString(KEY_BG_PATTERN, v.key).apply()
+
+    var backgroundPatternColor: Int
+        get() = sp.getInt(KEY_BG_PATTERN_COLOR, Theming.DEFAULT_ACCENT)
+        set(v) = sp.edit().putInt(KEY_BG_PATTERN_COLOR, v).apply()
+
+    /** Staerke des Musters in Prozent, 5..100. */
+    var backgroundPatternStrength: Int
+        get() = sp.getInt(KEY_BG_PATTERN_STRENGTH, 14)
+        set(v) = sp.edit().putInt(KEY_BG_PATTERN_STRENGTH, v.coerceIn(5, 100)).apply()
+
     val isConfigured: Boolean
         get() = meetDate != null || weddingDate != null
 
@@ -124,5 +154,11 @@ class Prefs(context: Context) {
         const val KEY_MS_THOUSAND = "milestone_thousands"
         const val KEY_MS_REPDIGIT = "milestone_repdigits"
         const val KEY_THEME_MODE = "theme_mode"
+        const val KEY_HEADER_PATTERN = "header_pattern"
+        const val KEY_HEADER_PATTERN_COLOR = "header_pattern_color"
+        const val KEY_HEADER_PATTERN_STRENGTH = "header_pattern_strength"
+        const val KEY_BG_PATTERN = "bg_pattern"
+        const val KEY_BG_PATTERN_COLOR = "bg_pattern_color"
+        const val KEY_BG_PATTERN_STRENGTH = "bg_pattern_strength"
     }
 }

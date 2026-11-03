@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -122,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         val corner = prefs.cardCornerDp
         val opacity = prefs.cardOpacity
 
-        binding.headerBox.background = Theming.headerBackground(this, accent)
+        applyPatterns(prefs, accent)
 
         val surface = Theming.resolveColor(
             this, com.google.android.material.R.attr.colorSurface, 0xFFFFFFFF.toInt()
@@ -147,6 +149,58 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSetup.backgroundTintList = accentTint
+    }
+
+    /**
+     * Muster liegen hinter allem anderen: im Kopfbereich auf dem Farbverlauf,
+     * auf der Seite auf der Hintergrundfarbe. Liegt dort ein Foto, deckt es
+     * das Muster ohnehin ab.
+     */
+    private fun applyPatterns(prefs: Prefs, accent: Int) {
+        val density = resources.displayMetrics.density
+
+        val header = Theming.headerBackground(this, accent)
+        val headerPattern = prefs.headerPattern
+        binding.headerBox.background = if (headerPattern == Pattern.NONE) {
+            header
+        } else {
+            LayerDrawable(
+                arrayOf(
+                    header,
+                    PatternDrawable(
+                        headerPattern,
+                        PatternColors.withStrength(
+                            prefs.headerPatternColor,
+                            prefs.headerPatternStrength
+                        ),
+                        density,
+                        bottomCornerRadius = 32f * density
+                    )
+                )
+            )
+        }
+
+        val backgroundColor = Theming.resolveColor(
+            this, android.R.attr.colorBackground, 0xFFFFFBFE.toInt()
+        )
+        val backgroundPattern = prefs.backgroundPattern
+        binding.root.background = if (backgroundPattern == Pattern.NONE) {
+            ColorDrawable(backgroundColor)
+        } else {
+            LayerDrawable(
+                arrayOf(
+                    ColorDrawable(backgroundColor),
+                    PatternDrawable(
+                        backgroundPattern,
+                        PatternColors.withStrength(
+                            prefs.backgroundPatternColor,
+                            prefs.backgroundPatternStrength
+                        ),
+                        density
+                    )
+                )
+            )
+        }
     }
 
     private fun applyPhoto(prefs: Prefs) {

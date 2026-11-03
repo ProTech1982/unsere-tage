@@ -1,5 +1,21 @@
 # Änderungsverlauf
 
+## 1.5 — 3. November 2026
+
+- **Muster** für den Kopfbereich und den Seitenhintergrund, wie in der
+  Schwester-App *Meine Termine*. Zehn gerechnete Muster in drei Gruppen:
+  *Dezent* (Punkte, Raster, Karo, Höhenlinien), *Geometrisch* (Schräge,
+  Zickzack, Waben, Kreuze) und *Lebhaft* (Wellen, Konfetti).
+- Für jeden der beiden Bereiche getrennt einstellbar: Muster, Musterfarbe
+  (weiß, schwarz oder eine der acht Akzentfarben) und Stärke.
+- Der Seitenhintergrund bekommt sein Muster auch dann, wenn gar kein Foto
+  hinterlegt ist. Liegt ein Foto darüber, deckt es das Muster ab.
+- Die Einstellungen sind von einem Textknopf unten in ein Zahnrad oben
+  rechts im Kopfbereich gewandert.
+- Die Update-Suche meldet sich jetzt mit einem Fenster, das Versionsnummer,
+  Download-Größe und den Änderungstext des Releases zeigt — vorher stand
+  dort nur eine Textzeile.
+
 ## 1.4 — 3. November 2026
 
 - Neue Seite **Über & Rechtliches** in den Einstellungen: offener Hinweis,

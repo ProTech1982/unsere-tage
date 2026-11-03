@@ -4,11 +4,13 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +44,18 @@ class SettingsActivity : AppCompatActivity() {
     private var themeMode = "system"
     private var pendingPageUrl: String? = null
     private val swatches = mutableListOf<View>()
+
+    private var headerPattern = Pattern.NONE
+    private var headerPatternColor = PatternColors.DEFAULT_ON_HEADER
+    private var headerPatternStrength = 20
+    private var bgPattern = Pattern.NONE
+    private var bgPatternColor = Theming.DEFAULT_ACCENT
+    private var bgPatternStrength = 14
+
+    private val headerPatternTiles = mutableListOf<View>()
+    private val bgPatternTiles = mutableListOf<View>()
+    private val headerPatternSwatches = mutableListOf<View>()
+    private val bgPatternSwatches = mutableListOf<View>()
 
     private val pickPhoto =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -109,6 +123,16 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         buildColorRow()
+        buildPatternRows()
+
+        binding.sliderHeaderPattern.addOnChangeListener { _, value, _ ->
+            headerPatternStrength = value.toInt()
+            paintPatternRows()
+        }
+        binding.sliderBgPattern.addOnChangeListener { _, value, _ ->
+            bgPatternStrength = value.toInt()
+            paintPatternRows()
+        }
 
         binding.swPreWarn.setOnCheckedChangeListener { _, checked ->
             binding.groupPreWarn.visibility = if (checked) View.VISIBLE else View.GONE
@@ -183,6 +207,15 @@ class SettingsActivity : AppCompatActivity() {
             }
         )
         binding.swMonthly.isChecked = prefs.monthlyEnabled
+
+        headerPattern = prefs.headerPattern
+        headerPatternColor = prefs.headerPatternColor
+        headerPatternStrength = prefs.headerPatternStrength
+        bgPattern = prefs.backgroundPattern
+        bgPatternColor = prefs.backgroundPatternColor
+        bgPatternStrength = prefs.backgroundPatternStrength
+        binding.sliderHeaderPattern.value = headerPatternStrength.toFloat().coerceIn(5f, 100f)
+        binding.sliderBgPattern.value = bgPatternStrength.toFloat().coerceIn(5f, 100f)
 
         updateDateButtons()
         updateTimeButton()
@@ -280,6 +313,12 @@ class SettingsActivity : AppCompatActivity() {
         prefs.milestoneRepdigits = binding.swMsRepdigits.isChecked
         prefs.milestoneThousands = binding.swMsThousands.isChecked
         prefs.milestoneHundreds = binding.swMsHundreds.isChecked
+        prefs.headerPattern = headerPattern
+        prefs.headerPatternColor = headerPatternColor
+        prefs.headerPatternStrength = headerPatternStrength
+        prefs.backgroundPattern = bgPattern
+        prefs.backgroundPatternColor = bgPatternColor
+        prefs.backgroundPatternStrength = bgPatternStrength
         prefs.themeMode = themeMode
         App.applyThemeMode(themeMode)
         prefs.monthlyEnabled = binding.swMonthly.isChecked
@@ -310,6 +349,8 @@ class SettingsActivity : AppCompatActivity() {
                     accent = color
                     paintSwatches()
                     updatePreview()
+                    // Die Vorschau der Kopf-Muster liegt auf der Akzentfarbe.
+                    paintPatternRows()
                 }
             }
             row.addView(swatch)
@@ -332,6 +373,184 @@ class SettingsActivity : AppCompatActivity() {
                 if (color == accent) setStroke(strokeWidth, ring)
             }
             swatch.background = drawable
+        }
+    }
+
+    // ---------- Muster ----------
+
+    private fun buildPatternRows() {
+        buildPatternTiles(binding.headerPatternRow, headerPatternTiles) { picked ->
+            headerPattern = picked
+            paintPatternRows()
+        }
+        buildPatternTiles(binding.bgPatternRow, bgPatternTiles) { picked ->
+            bgPattern = picked
+            paintPatternRows()
+        }
+        buildPatternSwatches(binding.headerPatternColorRow, headerPatternSwatches) { picked ->
+            headerPatternColor = picked
+            paintPatternRows()
+        }
+        buildPatternSwatches(binding.bgPatternColorRow, bgPatternSwatches) { picked ->
+            bgPatternColor = picked
+            paintPatternRows()
+        }
+        paintPatternRows()
+    }
+
+    /** Eine Reihe kleiner Vorschauen, eine je Muster. */
+    private fun buildPatternTiles(
+        row: LinearLayout,
+        tiles: MutableList<View>,
+        onPick: (Pattern) -> Unit
+    ) {
+        row.removeAllViews()
+        tiles.clear()
+
+        val density = resources.displayMetrics.density
+        val width = (74 * density).toInt()
+        val height = (54 * density).toInt()
+        val gap = (10 * density).toInt()
+
+        Pattern.entries.forEach { pattern ->
+            val column = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.marginEnd = gap }
+                setOnClickListener { onPick(pattern) }
+            }
+
+            val preview = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(width, height)
+                tag = pattern
+                contentDescription = pattern.label
+            }
+
+            val label = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    .also { it.topMargin = (4 * density).toInt() }
+                text = pattern.label
+                textSize = 11f
+                alpha = 0.75f
+            }
+
+            column.addView(preview)
+            column.addView(label)
+            row.addView(column)
+            tiles += preview
+        }
+    }
+
+    /** Farbkreise fuer die Musterfarbe. */
+    private fun buildPatternSwatches(
+        row: LinearLayout,
+        swatchList: MutableList<View>,
+        onPick: (Int) -> Unit
+    ) {
+        row.removeAllViews()
+        swatchList.clear()
+
+        val density = resources.displayMetrics.density
+        val size = (40 * density).toInt()
+        val gap = (10 * density).toInt()
+
+        PatternColors.CHOICES.forEach { (name, color) ->
+            val swatch = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(size, size).also { it.marginEnd = gap }
+                contentDescription = name
+                tag = color
+                setOnClickListener { onPick(color) }
+            }
+            row.addView(swatch)
+            swatchList += swatch
+        }
+    }
+
+    private fun paintPatternRows() {
+        val density = resources.displayMetrics.density
+        val ring = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorOnSurface, 0xFF2A1F23.toInt()
+        )
+        val surface = Theming.resolveColor(
+            this, com.google.android.material.R.attr.colorSurfaceVariant, 0xFFF8EFF2.toInt()
+        )
+        val strokeWidth = (3 * density).toInt()
+        val corner = 12 * density
+
+        // In der kleinen Vorschau muss das Muster sichtbar sein, auch wenn es
+        // auf der Startseite bewusst sehr zart eingestellt ist.
+        fun previewColor(color: Int, strength: Int) =
+            PatternColors.withStrength(color, strength.coerceAtLeast(45))
+
+        headerPatternTiles.forEach { tile ->
+            val pattern = tile.tag as Pattern
+            val base = GradientDrawable(
+                GradientDrawable.Orientation.BR_TL,
+                intArrayOf(accent, Theming.shade(accent, 0.55f))
+            ).apply {
+                cornerRadius = corner
+                if (pattern == headerPattern) setStroke(strokeWidth, ring)
+            }
+            tile.background = LayerDrawable(
+                arrayOf(
+                    base,
+                    PatternDrawable(
+                        pattern,
+                        previewColor(headerPatternColor, headerPatternStrength),
+                        density,
+                        scale = 0.5f
+                    )
+                )
+            )
+        }
+
+        bgPatternTiles.forEach { tile ->
+            val pattern = tile.tag as Pattern
+            val base = GradientDrawable().apply {
+                setColor(surface)
+                cornerRadius = corner
+                if (pattern == bgPattern) setStroke(strokeWidth, ring)
+            }
+            tile.background = LayerDrawable(
+                arrayOf(
+                    base,
+                    PatternDrawable(
+                        pattern,
+                        previewColor(bgPatternColor, bgPatternStrength),
+                        density,
+                        scale = 0.5f
+                    )
+                )
+            )
+        }
+
+        paintPatternSwatches(headerPatternSwatches, headerPatternColor, ring, strokeWidth)
+        paintPatternSwatches(bgPatternSwatches, bgPatternColor, ring, strokeWidth)
+
+        binding.tvHeaderPatternValue.text = "$headerPatternStrength %"
+        binding.tvBgPatternValue.text = "$bgPatternStrength %"
+    }
+
+    private fun paintPatternSwatches(
+        swatchList: List<View>,
+        selected: Int,
+        ring: Int,
+        strokeWidth: Int
+    ) {
+        swatchList.forEach { swatch ->
+            val color = swatch.tag as Int
+            swatch.background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(color)
+                if (color == selected) {
+                    setStroke(strokeWidth, ring)
+                } else {
+                    // Weiss waere auf hellem Grund sonst unsichtbar.
+                    setStroke((1 * resources.displayMetrics.density).toInt(), 0x33000000)
+                }
+            }
         }
     }
 
