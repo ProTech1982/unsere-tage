@@ -66,6 +66,27 @@ macht es `keepSettingsBelowStatusBar()` in `MainActivity.kt` für das Zahnrad.
 - Signierung: fester Keystore, Alias `unseretage`, aus den Secrets
   `KEYSTORE_B64` und `KEYSTORE_PASSWORD`. **Liegt nicht im Repo.**
 
+## Vor dem Pushen pruefen
+
+Ein gruener Build heisst hier **nicht**, dass die App laeuft - gebaut, aber
+nie gestartet. Deshalb:
+
+- `python3 tools/pruefe-layouts.py` laeuft in der Action vor dem Bauen und
+  bricht ab, wenn ein Material-Slider einen Startwert hat, der nicht genau
+  auf einem Schritt liegt (`value = valueFrom + n * stepSize`). Genau das hat
+  in 1.5 die Einstellungen beim Oeffnen abstuerzen lassen.
+- Dieselbe Falle gilt fuer Werte, die aus `Prefs` in einen Regler wandern.
+  `setSnapped()` in `SettingsActivity.kt` rundet sie, `Prefs.snapStrength()`
+  tut dasselbe beim Lesen. Neue Regler bitte genauso anbinden.
+- Grundsaetzlich: Alles, was erst beim Oeffnen eines Fensters geprueft wird -
+  Startwerte von Reglern, `as`-Umwandlungen von `tag`, Pflichtfelder in
+  Layouts - faellt im Build nicht auf. Im Zweifel einen Pruefschritt in
+  `tools/` dazulegen, statt sich auf den gruenen Haken zu verlassen.
+- Die Einstellungen sind zugleich der einzige Weg zur Update-Suche. Stuerzt
+  dieses Fenster ab, kommt der Nutzer nicht mehr an ein Update heran und muss
+  die APK von Hand aus den GitHub-Releases laden. Aenderungen dort also mit
+  besonderer Vorsicht.
+
 ## Absichtliche Entscheidungen (nicht versehentlich so)
 
 - **Kein `REQUEST_INSTALL_PACKAGES`, kein eingebauter Download, kein

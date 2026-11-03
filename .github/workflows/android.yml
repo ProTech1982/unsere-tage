@@ -43,6 +43,9 @@ jobs:
           mkdir -p keystore
           printf '%s' "$KEYSTORE_B64" | base64 -d > keystore/unsere-tage.jks
 
+      - name: Layouts pruefen
+        run: python3 tools/pruefe-layouts.py
+
       - name: APK bauen
         env:
           BUILD_NUMBER: ${{ github.run_number }}

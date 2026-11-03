@@ -214,8 +214,10 @@ class SettingsActivity : AppCompatActivity() {
         bgPattern = prefs.backgroundPattern
         bgPatternColor = prefs.backgroundPatternColor
         bgPatternStrength = prefs.backgroundPatternStrength
-        binding.sliderHeaderPattern.value = headerPatternStrength.toFloat().coerceIn(5f, 100f)
-        binding.sliderBgPattern.value = bgPatternStrength.toFloat().coerceIn(5f, 100f)
+        // Ein Wert zwischen zwei Schritten laesst den Regler eine Ausnahme
+        // werfen und das ganze Fenster abstuerzen - deshalb hier runden.
+        binding.sliderHeaderPattern.setSnapped(headerPatternStrength)
+        binding.sliderBgPattern.setSnapped(bgPatternStrength)
 
         updateDateButtons()
         updateTimeButton()
@@ -377,6 +379,14 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // ---------- Muster ----------
+
+    /** Setzt den Regler auf den naechsten gueltigen Schritt innerhalb seiner Grenzen. */
+    private fun com.google.android.material.slider.Slider.setSnapped(percent: Int) {
+        val step = if (stepSize > 0f) stepSize else 1f
+        val steps = ((percent - valueFrom) / step).toDouble()
+        val snapped = valueFrom + Math.round(steps) * step
+        value = snapped.coerceIn(valueFrom, valueTo)
+    }
 
     private fun buildPatternRows() {
         buildPatternTiles(binding.headerPatternRow, headerPatternTiles) { picked ->
