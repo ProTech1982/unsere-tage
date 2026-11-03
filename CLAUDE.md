@@ -96,9 +96,22 @@ macht es `keepSettingsBelowStatusBar()` in `MainActivity.kt` für das Zahnrad.
 
 ## Stand
 
-**3. November 2026, Version 1.4 (Build 15)**
+**3. November 2026, Version 1.5 (Build 17)**
 
 Zuletzt gemacht:
+
+- Build 17 / Version 1.5: **Muster** für den Kopfbereich und den
+  Seitenhintergrund, portiert aus *Meine Termine*. Neue Datei `Patterns.kt`
+  mit dem `Pattern`-Enum (10 Muster in drei Gruppen), der Klasse
+  `PatternDrawable` (zeichnet mit Canvas, nicht mit Compose) und
+  `PatternColors`. Je Bereich werden Muster, Musterfarbe und Stärke in
+  `Prefs` gespeichert; angewendet wird alles in `applyPatterns()` in
+  `MainActivity.kt` als `LayerDrawable` über dem Farbverlauf bzw. der
+  Hintergrundfarbe. `PatternDrawable` kann unten abrunden
+  (`bottomCornerRadius`), sonst ragt das Muster über die runde Kante des
+  Kopfbereichs hinaus. Die Auswahl in den Einstellungen baut
+  `buildPatternRows()` zur Laufzeit; die Vorschaukacheln heben die Stärke
+  auf mindestens 45 % an, damit man das Muster im Kleinen überhaupt sieht.
 
 - Build 14: Einstellungen sind **vom Textknopf unten in ein Zahnrad oben
   rechts im Kopfbereich** gewandert (`activity_main.xml`, Knopf heißt
@@ -116,8 +129,8 @@ Zuletzt gemacht:
 
 ## Offene Punkte
 
-- `appVersionName` steht noch auf `1.4`, obwohl seither zwei Builds dazukamen.
-  Bei der nächsten inhaltlichen Änderung auf `1.5` setzen und einen
-  Abschnitt in `CHANGELOG.md` ergänzen.
+- `appVersionName` in `gradle.properties` steht auf `1.5` und muss bei der
+  nächsten inhaltlichen Änderung von Hand hochgesetzt werden, zusammen mit
+  einem Abschnitt in `CHANGELOG.md`.
 - Klarname statt „ProTech1982" in Lizenz und Rechtlichem? Noch nicht entschieden.
 - Soll Claude im KI-Hinweis namentlich genannt bleiben? Noch offen.
