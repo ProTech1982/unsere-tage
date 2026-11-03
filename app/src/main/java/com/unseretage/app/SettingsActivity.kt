@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -361,25 +362,77 @@ class SettingsActivity : AppCompatActivity() {
             when (result) {
                 is Updater.CheckResult.Available -> {
                     pendingPageUrl = result.pageUrl
-                    showUpdateStatus(
-                        "${result.name} ist verfügbar. Die Seite öffnet im Browser, " +
-                            "dort auf UnsereTage.apk tippen und die Datei öffnen."
-                    )
+                    showUpdateStatus("${result.name} ist verfügbar.")
                     binding.btnInstallUpdate.text = "Download öffnen"
                     binding.btnInstallUpdate.visibility = View.VISIBLE
+                    showUpdateDialog(result)
                 }
-                Updater.CheckResult.UpToDate ->
+                Updater.CheckResult.UpToDate -> {
                     showUpdateStatus("Du hast bereits die neueste Version.")
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Alles aktuell")
+                        .setMessage(
+                            "Version ${Updater.installedName(this)} " +
+                                "(Build ${Updater.installedBuild(this)}) ist die neueste."
+                        )
+                        .setPositiveButton("Alles klar", null)
+                        .show()
+                }
                 is Updater.CheckResult.NeedsBrowser -> {
                     pendingPageUrl = null
                     showUpdateStatus(result.reason)
                     binding.btnInstallUpdate.text = "Im Browser öffnen"
                     binding.btnInstallUpdate.visibility = View.VISIBLE
+                    showUpdateProblem(result.reason)
                 }
-                is Updater.CheckResult.Failed ->
+                is Updater.CheckResult.Failed -> {
                     showUpdateStatus(result.reason)
+                    showUpdateProblem(result.reason)
+                }
             }
         }
+    }
+
+    /** Kleines Fenster mit Versionsnummer und Änderungstext des Releases. */
+    private fun showUpdateDialog(result: Updater.CheckResult.Available) {
+        val lines = StringBuilder()
+        lines.append("Installiert ist ${Updater.installedName(this)}")
+        lines.append(" (Build ${Updater.installedBuild(this)}).")
+        if (result.sizeBytes > 0) {
+            lines.append(" Der Download ist etwa ${result.sizeBytes / 1024 / 1024} MB groß.")
+        }
+
+        val notes = result.notes.lineSequence()
+            .filter { it.isNotBlank() }
+            .take(6)
+            .joinToString("\n")
+        if (notes.isNotBlank()) {
+            lines.append("\n\n")
+            lines.append(notes)
+        }
+
+        lines.append("\n\nDer Browser öffnet sich und lädt die Datei. ")
+        lines.append("Danach in den Downloads antippen, um sie einzuspielen.")
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("${result.name} ist da")
+            .setMessage(lines.toString())
+            .setPositiveButton("Im Browser laden") { _, _ ->
+                Updater.openReleasesPage(this, result.apkUrl)
+            }
+            .setNegativeButton("Später", null)
+            .show()
+    }
+
+    private fun showUpdateProblem(reason: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Nachsehen ging nicht")
+            .setMessage(reason)
+            .setPositiveButton("Im Browser nachsehen") { _, _ ->
+                Updater.openReleasesPage(this, pendingPageUrl)
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
     }
 
     private fun showUpdateStatus(text: String) {

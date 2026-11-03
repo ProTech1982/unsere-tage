@@ -57,6 +57,10 @@ jobs:
           cp app/build/outputs/apk/release/app-release.apk out/UnsereTage.apk
           version=$(grep '^appVersionName=' gradle.properties | cut -d= -f2)
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Betreffzeile des letzten Commits als Aenderungstext, ohne Anhaenge
+          # wie Co-Authored-By.
+          changes=$(git log -1 --pretty=%s)
+          echo "changes=$changes" >> "$GITHUB_OUTPUT"
 
       - name: Als Download bereitstellen
         uses: softprops/action-gh-release@v2
@@ -66,8 +70,10 @@ jobs:
           body: |
             Version ${{ steps.apk.outputs.version }}, Build ${{ github.run_number }}.
 
+            Aenderungen in diesem Build:
+            ${{ steps.apk.outputs.changes }}
+
             Unten auf **UnsereTage.apk** tippen, herunterladen und oeffnen.
-            Aenderungen stehen in [CHANGELOG.md](../blob/main/CHANGELOG.md).
           files: out/UnsereTage.apk
 
       - name: Auch als Artefakt ablegen

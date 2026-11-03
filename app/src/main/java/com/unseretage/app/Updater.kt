@@ -28,7 +28,14 @@ object Updater {
 
     sealed class CheckResult {
         /** Eine neuere Version liegt bereit. */
-        data class Available(val build: Int, val name: String, val pageUrl: String) : CheckResult()
+        data class Available(
+            val build: Int,
+            val name: String,
+            val pageUrl: String,
+            val apkUrl: String,
+            val sizeBytes: Long,
+            val notes: String
+        ) : CheckResult()
 
         /** Die installierte Version ist die neueste. */
         data object UpToDate : CheckResult()
@@ -91,7 +98,30 @@ object Updater {
 
             val page = json.optString("html_url").ifBlank { RELEASES_PAGE }
             val name = json.optString("name").ifBlank { tag }
-            return CheckResult.Available(build, name, page)
+
+            // Direktlink auf die APK und ihre Groesse, damit im Fenster steht,
+            // was heruntergeladen wird.
+            var apkUrl = page
+            var size = 0L
+            json.optJSONArray("assets")?.let { assets ->
+                for (i in 0 until assets.length()) {
+                    val asset = assets.optJSONObject(i) ?: continue
+                    if (asset.optString("name").endsWith(".apk", ignoreCase = true)) {
+                        apkUrl = asset.optString("browser_download_url").ifBlank { page }
+                        size = asset.optLong("size")
+                        break
+                    }
+                }
+            }
+
+            return CheckResult.Available(
+                build = build,
+                name = name,
+                pageUrl = page,
+                apkUrl = apkUrl,
+                sizeBytes = size,
+                notes = json.optString("body").trim()
+            )
         } finally {
             connection.disconnect()
         }
