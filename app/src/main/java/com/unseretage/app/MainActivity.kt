@@ -10,10 +10,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.unseretage.app.databinding.ActivityMainBinding
 import com.unseretage.app.databinding.ItemCounterCardBinding
 import java.time.LocalDate
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSettings.setOnClickListener { openSettings() }
         binding.btnSetup.setOnClickListener { openSettings() }
+        keepSettingsBelowStatusBar()
 
         requestNotificationPermissionIfNeeded()
     }
@@ -47,6 +51,23 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         render()
         AlarmScheduler.scheduleNext(this)
+    }
+
+    /**
+     * Der Statusbalken liegt ueber dem Kopfbereich. Damit das Zahnrad
+     * nicht darunter verschwindet, bekommt es dessen Hoehe als Abstand.
+     */
+    private fun keepSettingsBelowStatusBar() {
+        val extra = (8 * resources.displayMetrics.density).toInt()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.btnSettings) { view, insets ->
+            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val params = view.layoutParams as FrameLayout.LayoutParams
+            if (params.topMargin != top + extra) {
+                params.topMargin = top + extra
+                view.layoutParams = params
+            }
+            insets
+        }
     }
 
     private fun openSettings() {

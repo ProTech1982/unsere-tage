@@ -95,6 +95,20 @@
                         android:shadowRadius="8"
                         android:textColor="#CCFFFFFF" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSettings"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Einstellungen"
+                    app:icon="@drawable/ic_settings"
+                    app:iconSize="24dp"
+                    app:iconTint="#FFFFFFFF"
+                    app:iconPadding="0dp" />
             </FrameLayout>
 
             <LinearLayout
@@ -180,19 +194,11 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSettings"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Einstellungen" />
-
                 <TextView
                     android:id="@+id/tvNotifyInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="18dp"
                     android:textSize="13sp"
                     android:gravity="center"
                     android:textColor="?attr/colorOnSurfaceVariant" />
