@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## 1.4 — 3. November 2026
+
+- Neue Seite **Über & Rechtliches** in den Einstellungen: offener Hinweis,
+  dass die App mit Hilfe von KI entwickelt wurde, dazu Haftungsausschluss,
+  Datenschutzhinweis und die Lizenzen der verwendeten Bibliotheken.
+- `LICENSE` (MIT) und `THIRD-PARTY-LICENSES.md` im Projekt. Die Apache
+  License 2.0 der verwendeten Bibliotheken verlangt, dass ihre Lizenz- und
+  Copyright-Vermerke bei der Weitergabe mitgeliefert werden.
+
 ## 1.3 — 2. November 2026
 
 - Versionsanzeige und Update-Suche sind von der Startseite in die

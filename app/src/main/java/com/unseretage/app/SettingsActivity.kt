@@ -71,6 +71,10 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.btnTime.setOnClickListener { pickTime() }
 
+        binding.btnLegal.setOnClickListener {
+            startActivity(Intent(this, LegalActivity::class.java))
+        }
+
         binding.btnPickPhoto.setOnClickListener {
             pickPhoto.launch(arrayOf("image/*"))
         }

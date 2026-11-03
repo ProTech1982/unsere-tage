@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:paddingTop="48dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Über &amp; Rechtliches" />
+
+        <!-- Über die App -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SoftCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    style="@style/Eyebrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Unsere Tage" />
+
+                <TextView
+                    android:id="@+id/tvVersionLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:text="Ein privates Projekt von ProTech1982. Der Quellcode liegt offen auf GitHub." />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnProject"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Projektseite öffnen" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- KI-Hinweis -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SoftCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    style="@style/Eyebrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mit künstlicher Intelligenz entwickelt" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Konzept, Anforderungen und alle Entscheidungen stammen von ProTech1982. Den Programmcode hat überwiegend Claude, ein KI-Assistent von Anthropic, nach diesen Vorgaben geschrieben." />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Was das bedeutet:" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:text="• Der Code ist nicht von einem Menschen Zeile für Zeile geprüft worden. Er wird automatisch kompiliert, aber nicht systematisch getestet.\n\n• Die App ist kein geprüftes Produkt, sondern eine kleine Erinnerungshilfe.\n\n• Sie kann Fehler enthalten. Verlass dich bei wichtigen Tagen nicht allein auf sie." />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:textSize="13sp"
+                    android:alpha="0.7"
+                    android:lineSpacingExtra="3dp"
+                    android:text="Dieser Hinweis steht hier aus Transparenz, nicht weil eine Vorschrift ihn verlangt." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Haftung -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SoftCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    style="@style/Eyebrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Haftung" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Die Nutzung erfolgt auf eigene Gefahr. Die App wird ohne Gewähr bereitgestellt; eine Haftung für Schäden aus ihrer Nutzung ist, soweit gesetzlich zulässig, ausgeschlossen. Unberührt bleibt die Haftung für Vorsatz und grobe Fahrlässigkeit sowie für Schäden aus der Verletzung von Leben, Körper oder Gesundheit." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Datenschutz -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SoftCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    style="@style/Eyebrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Datenschutz" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Alle Eingaben – Daten, Uhrzeit, Einstellungen und das gewählte Foto – bleiben auf diesem Gerät. Es gibt keine Konten, keine Cloud, keine Werbung und keine Analyse-Werkzeuge. Das Foto wird nicht kopiert, die App merkt sich nur die Leseerlaubnis dafür." />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:text="Daten verlassen das Gerät nur, wenn du auf „Nach Updates suchen“ tippst. Dann fragt die App bei api.github.com nach der neuesten Version. GitHub sieht dabei – wie beim Aufruf jeder Webseite – die IP-Adresse des Geräts." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Lizenzen -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SoftCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <TextView
+                    style="@style/Eyebrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lizenzen" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Der eigene Programmcode dieser App steht unter der MIT-Lizenz: Verwenden, ändern und weitergeben ist erlaubt, solange der Copyright-Hinweis erhalten bleibt. Ohne Gewährleistung." />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Verwendete Bibliotheken, alle unter Apache License 2.0:" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:text="• AndroidX Core, AppCompat, Activity — The Android Open Source Project\n• Material Components for Android — Google LLC\n• Kotlin Standard Library — JetBrains s.r.o. und Mitwirkende" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnApache"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Apache License 2.0 lesen" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnThirdParty"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lizenzen im Projekt nachlesen" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="Zurück" />
+    </LinearLayout>
+</ScrollView>

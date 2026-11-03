@@ -29,6 +29,11 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".LegalActivity"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity" />
+
         <receiver
             android:name=".AlarmReceiver"
             android:exported="false" />

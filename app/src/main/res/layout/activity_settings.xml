@@ -542,5 +542,23 @@
             android:layout_marginTop="6dp"
             android:text="Testbenachrichtigung senden" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLegal"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Über &amp; Rechtliches" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:alpha="0.6"
+            android:lineSpacingExtra="2dp"
+            android:text="Mit Hilfe von KI entwickelt. Ohne Gewähr." />
+
     </LinearLayout>
 </ScrollView>
