@@ -685,6 +685,38 @@
             android:alpha="0.7"
             android:visibility="gone" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Sicherung"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:alpha="0.7"
+            android:lineSpacingExtra="3dp"
+            android:text="Speichert alle Einstellungen in einer Datei, die eine Neuinstallation übersteht." />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBackup"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Sicherung speichern" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRestore"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Sicherung wiederherstellen" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCheckUpdate"
             style="@style/Widget.Material3.Button.TonalButton"

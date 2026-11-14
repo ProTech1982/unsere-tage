@@ -70,6 +70,31 @@ class SettingsActivity : AppCompatActivity() {
             updatePhotoViews()
         }
 
+    private val createBackup =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
+            if (uri == null) return@registerForActivityResult
+            Backup.write(this, uri)
+                .onSuccess { Toast.makeText(this, "Sicherung gespeichert", Toast.LENGTH_LONG).show() }
+                .onFailure { Toast.makeText(this, "Sicherung fehlgeschlagen: ${it.message}", Toast.LENGTH_LONG).show() }
+        }
+
+    private val openBackup =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri == null) return@registerForActivityResult
+            Backup.restore(this, uri)
+                .onSuccess {
+                    App.applyThemeMode(prefs.themeMode)
+                    AlarmScheduler.scheduleNext(this)
+                    Toast.makeText(
+                        this,
+                        "Wiederhergestellt. Das Foto bitte neu auswählen.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    recreate()
+                }
+                .onFailure { Toast.makeText(this, "Wiederherstellen fehlgeschlagen: ${it.message}", Toast.LENGTH_LONG).show() }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -140,6 +165,17 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.tvVersion.text =
             "Version ${Updater.installedName(this)} installiert (Build ${Updater.installedBuild(this)})"
+        binding.btnBackup.setOnClickListener { createBackup.launch(Backup.suggestedName()) }
+        binding.btnRestore.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Sicherung wiederherstellen?")
+                .setMessage("Die aktuellen Einstellungen werden durch die Sicherung ersetzt.")
+                .setPositiveButton("Wiederherstellen") { _, _ ->
+                    openBackup.launch(arrayOf("application/json", "text/plain", "*/*"))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        }
         binding.btnCheckUpdate.setOnClickListener { checkForUpdate() }
         binding.btnInstallUpdate.setOnClickListener {
             Updater.openReleasesPage(this, pendingPageUrl)
