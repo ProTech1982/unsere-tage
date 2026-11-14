@@ -25,6 +25,14 @@ object Reminders {
                     "${couple}Heute sind es ${DateMath.formatNumber(milestone.days)} gemeinsame Tage."
                 )
             }
+
+            val schnapsdatum = Schnapsdaten.onDay(prefs, milestoneBase, today)
+            if (schnapsdatum != null) {
+                out += Reminder(
+                    "${schnapsdatum.label}: ${schnapsdatum.short}",
+                    "${couple}Heute seid ihr genau ${schnapsdatum.text} zusammen."
+                )
+            }
         }
 
         if (prefs.monthlyEnabled) {

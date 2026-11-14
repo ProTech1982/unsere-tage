@@ -1,5 +1,20 @@
 # Änderungsverlauf
 
+## 1.6 — 14. November 2026
+
+- Neue Meilenstein-Art **Schnapsdatum**: Jahre, Monate und Tage sind dieselbe
+  Zahl, also 7 Jahre, 7 Monate und 7 Tage zusammen. Das sind 1/1/1 bis
+  11/11/11 — ab zwölf Monaten wird daraus ein weiteres Jahr, das Muster kann
+  in der Aufteilung also nicht mehr auftauchen.
+- Das ist **etwas anderes als die Schnapszahlen**, die es schon gab: die
+  zählen die Gesamtzahl gemeinsamer Tage (777, 7777). Ein Schnapsdatum trifft
+  mit einer runden Tageszahl so gut wie nie zusammen, darum kam dafür bisher
+  keine Erinnerung. Der Schalter in den Einstellungen heißt jetzt
+  „Schnapszahlen in Tagen", damit die beiden nicht zu verwechseln sind.
+- Eigener Schalter in den Einstellungen, standardmäßig eingeschaltet.
+- Die Karte „Nächster Meilenstein" auf der Startseite zeigt, was zuerst
+  kommt — runde Tageszahl oder Schnapsdatum.
+
 ## 1.5 — 3. November 2026
 
 - **Muster** für den Kopfbereich und den Seitenhintergrund, wie in der

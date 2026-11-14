@@ -38,6 +38,8 @@ Aufbau unter `app/src/main/java/com/unseretage/app/`:
 - `LegalActivity.kt` – Über & Rechtliches
 - `Prefs.kt` – sämtliche gespeicherten Einstellungen an einem Ort
 - `DateMath.kt`, `Milestones.kt` – Rechnerei für Tage, Jahrestage, Meilensteine
+- `Schnapsdaten.kt` – Schnapsdatum (7 Jahre, 7 Monate, 7 Tage), datums- statt
+  tageszahlbasiert; nicht mit den Schnapszahlen in `Milestones.kt` verwechseln
 - `Notifier.kt`, `AlarmScheduler.kt`, `AlarmReceiver.kt`, `BootReceiver.kt`,
   `Reminders.kt` – Benachrichtigungen, überstehen den Neustart
 - `Theming.kt`, `PhotoStyle.kt`, `PhotoLoader.kt` – Aussehen und Fotos
@@ -117,36 +119,21 @@ nie gestartet. Deshalb:
 
 ## Stand
 
-**3. November 2026, Version 1.5 (Build 17)**
+**14. November 2026, Version 1.6**
 
 Zuletzt gemacht:
 
-- Build 17 / Version 1.5: **Muster** für den Kopfbereich und den
-  Seitenhintergrund, portiert aus *Meine Termine*. Neue Datei `Patterns.kt`
-  mit dem `Pattern`-Enum (10 Muster in drei Gruppen), der Klasse
-  `PatternDrawable` (zeichnet mit Canvas, nicht mit Compose) und
-  `PatternColors`. Je Bereich werden Muster, Musterfarbe und Stärke in
-  `Prefs` gespeichert; angewendet wird alles in `applyPatterns()` in
-  `MainActivity.kt` als `LayerDrawable` über dem Farbverlauf bzw. der
-  Hintergrundfarbe. `PatternDrawable` kann unten abrunden
-  (`bottomCornerRadius`), sonst ragt das Muster über die runde Kante des
-  Kopfbereichs hinaus. Die Auswahl in den Einstellungen baut
-  `buildPatternRows()` zur Laufzeit; die Vorschaukacheln heben die Stärke
-  auf mindestens 45 % an, damit man das Muster im Kleinen überhaupt sieht.
-
-- Build 14: Einstellungen sind **vom Textknopf unten in ein Zahnrad oben
-  rechts im Kopfbereich** gewandert (`activity_main.xml`, Knopf heißt
-  weiterhin `btnSettings`, neues Icon `res/drawable/ic_settings.xml`).
-  Der Abstand zum Statusbalken kommt aus `keepSettingsBelowStatusBar()`.
-- Build 15: Die Update-Suche zeigt jetzt **ein Fenster statt einer
-  Textzeile** – wie bei *Meine Termine*. Drei Fälle in `SettingsActivity.kt`:
-  neue Version (Titel mit Versionsnummer, installierte Version,
-  Download-Größe, Änderungstext, dann „Im Browser laden" / „Später"),
-  „Alles aktuell", „Nachsehen ging nicht".
-  `Updater.CheckResult.Available` trägt dafür zusätzlich `apkUrl`,
-  `sizeBytes` und `notes`.
-  Im selben Zug trägt der Workflow den Commit-Betreff als Änderungstext
-  ins Release ein – vorher stand dort nur ein fester Satz.
+- Version 1.6: Neue Meilenstein-Art **Schnapsdatum** in `Schnapsdaten.kt` –
+  Jahre, Monate und Tage sind dieselbe Zahl (7/7/7). Nur 1 bis 11 kommen vor,
+  ab zwölf Monaten wird daraus ein Jahr. Das Datum ist
+  `base.plusYears(n).plusMonths(n).plusDays(n)`, also datumsbasiert, während
+  `Milestones.kt` mit der Gesamtzahl gemeinsamer Tage rechnet. **Die beiden
+  nicht vermischen** – genau diese Verwechslung war der Anlass: der Nutzer
+  hatte Schnapszahlen eingeschaltet und am 7/7/7 trotzdem keine Erinnerung
+  bekommen. Neuer Schalter `swMsTriples` (`Prefs.milestoneTriples`, Vorgabe
+  ein), und der alte Schalter heißt jetzt „Schnapszahlen in Tagen".
+  `renderMilestone()` in `MainActivity.kt` zeigt von beiden das
+  nächstliegende.
 
 ## Offene Punkte
 

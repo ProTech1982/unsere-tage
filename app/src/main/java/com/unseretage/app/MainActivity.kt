@@ -272,19 +272,38 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderMilestone(prefs: Prefs, today: LocalDate) {
         val base = prefs.meetDate ?: prefs.weddingDate
-        val milestone = base?.let { Milestones.next(prefs, DateMath.totalDays(it, today)) }
-
-        if (base == null || milestone == null) {
+        if (base == null) {
             binding.cardMilestone.visibility = View.GONE
             return
         }
 
         val done = DateMath.totalDays(base, today)
-        val until = milestone.days - done
-        val reachedOn = base.plusDays(milestone.days)
+        val milestone = Milestones.next(prefs, done)
+        val milestoneOn = milestone?.let { base.plusDays(it.days) }
+        val schnapsdatum = Schnapsdaten.next(prefs, base, today)
+
+        // Faellt beides an, das naechstliegende zeigen.
+        val milestoneFirst = milestone != null && milestoneOn != null &&
+            (schnapsdatum == null || !milestoneOn.isAfter(schnapsdatum.date))
+
+        val text = if (milestoneFirst && milestone != null && milestoneOn != null) {
+            val until = milestone.days - done
+            "${milestone.label}: ${DateMath.formatNumber(milestone.days)} gemeinsame Tage " +
+                "am ${milestoneOn.format(dateFormat)} \u2013 ${DateMath.formatDays(until)}."
+        } else if (schnapsdatum != null) {
+            val until = DateMath.totalDays(today, schnapsdatum.date)
+            "${schnapsdatum.label}: ${schnapsdatum.text} " +
+                "am ${schnapsdatum.date.format(dateFormat)} \u2013 ${DateMath.formatDays(until)}."
+        } else {
+            null
+        }
+
+        if (text == null) {
+            binding.cardMilestone.visibility = View.GONE
+            return
+        }
         binding.cardMilestone.visibility = View.VISIBLE
-        binding.tvMilestone.text = "${milestone.label}: ${DateMath.formatNumber(milestone.days)} " +
-            "gemeinsame Tage am ${reachedOn.format(dateFormat)} \u2013 ${DateMath.formatDays(until)}."
+        binding.tvMilestone.text = text
     }
 
     /** Zaehlt die grosse Zahl kurz hoch, sofern Animationen eingeschaltet sind. */

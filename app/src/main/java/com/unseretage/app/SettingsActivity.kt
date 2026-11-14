@@ -195,6 +195,7 @@ class SettingsActivity : AppCompatActivity() {
         )
 
         binding.swMsRepdigits.isChecked = prefs.milestoneRepdigits
+        binding.swMsTriples.isChecked = prefs.milestoneTriples
         binding.swMsThousands.isChecked = prefs.milestoneThousands
         binding.swMsHundreds.isChecked = prefs.milestoneHundreds
 
@@ -313,6 +314,7 @@ class SettingsActivity : AppCompatActivity() {
         prefs.cardOpacity = opacity
         prefs.accentColor = accent
         prefs.milestoneRepdigits = binding.swMsRepdigits.isChecked
+        prefs.milestoneTriples = binding.swMsTriples.isChecked
         prefs.milestoneThousands = binding.swMsThousands.isChecked
         prefs.milestoneHundreds = binding.swMsHundreds.isChecked
         prefs.headerPattern = headerPattern

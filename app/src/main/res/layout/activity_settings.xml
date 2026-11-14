@@ -252,7 +252,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Schnapszahlen (111, 777, 1111 …)" />
+            android:text="Schnapszahlen in Tagen (111, 777, 1111 …)" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swMsTriples"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Schnapsdatum (7 Jahre, 7 Monate, 7 Tage)" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/swMsThousands"

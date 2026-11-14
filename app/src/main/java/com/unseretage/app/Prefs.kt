@@ -54,6 +54,11 @@ class Prefs(context: Context) {
         get() = sp.getBoolean(KEY_MS_REPDIGIT, true)
         set(v) = sp.edit().putBoolean(KEY_MS_REPDIGIT, v).apply()
 
+    /** Schnapsdatum: 7 Jahre, 7 Monate, 7 Tage. Nicht die Tageszahl, sondern das Muster. */
+    var milestoneTriples: Boolean
+        get() = sp.getBoolean(KEY_MS_TRIPLE, true)
+        set(v) = sp.edit().putBoolean(KEY_MS_TRIPLE, v).apply()
+
     /** "light", "dark" oder "system". */
     var themeMode: String
         get() = sp.getString(KEY_THEME_MODE, "system") ?: "system"
@@ -161,6 +166,7 @@ class Prefs(context: Context) {
         const val KEY_MS_HUNDRED = "milestone_hundreds"
         const val KEY_MS_THOUSAND = "milestone_thousands"
         const val KEY_MS_REPDIGIT = "milestone_repdigits"
+        const val KEY_MS_TRIPLE = "milestone_triples"
         const val KEY_THEME_MODE = "theme_mode"
         const val KEY_HEADER_PATTERN = "header_pattern"
         const val KEY_HEADER_PATTERN_COLOR = "header_pattern_color"
