@@ -6,9 +6,11 @@ plugins {
 // Damit sich eine neue Version ueber die vorherige installieren laesst,
 // muss jede APK mit demselben Schluessel signiert sein. Der Schluessel
 // kommt aus einem GitHub-Secret und liegt nicht im Repository.
-val keystoreFile = rootProject.file("keystore/unsere-tage.jks")
-val keystorePassword: String? = System.getenv("KEYSTORE_PASSWORD")
-val signingReady = keystoreFile.exists() && !keystorePassword.isNullOrBlank()
+val keystoreFile: File? = System.getenv("ANDROID_KEYSTORE_FILE")?.let { File(it) }
+val keystorePassword: String? = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+val keystoreAlias: String? = System.getenv("ANDROID_KEY_ALIAS")
+val signingReady = keystoreFile?.exists() == true &&
+    !keystorePassword.isNullOrBlank() && !keystoreAlias.isNullOrBlank()
 
 android {
     namespace = "com.unseretage.app"
@@ -32,7 +34,7 @@ android {
         signingConfigs.create("shared") {
             storeFile = keystoreFile
             storePassword = keystorePassword
-            keyAlias = System.getenv("KEY_ALIAS") ?: "unseretage"
+            keyAlias = keystoreAlias
             keyPassword = keystorePassword
         }
     }
